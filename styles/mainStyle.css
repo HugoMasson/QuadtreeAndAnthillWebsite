@@ -1,0 +1,19 @@
+body {
+    background: rgb(43,127,152);
+    background: radial-gradient(circle, rgba(43,127,152,1) 30%, rgba(39,143,181,1) 75%, rgba(35,102,181,1) 100%);
+}
+.centerTxt {
+    padding-top: 4%;
+    text-align: center;
+    width: 50%;
+}
+
+.titleDemo {
+    margin-top: 7%;
+}
+
+.canvas {
+    margin-top: 5%;
+    cursor: crosshair;
+}
+
