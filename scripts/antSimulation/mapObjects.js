@@ -5,6 +5,8 @@ class FoodSource {
         this.y = y;
         this.w = 4;
         this.h = 4;
+        this.r = 20;
+        this.isAttacked = false;
         this.amount = amount;
     }
 }
@@ -24,6 +26,7 @@ class Anthill {
         this.y = y;
         this.w = 15;
         this.h = 15;
+        this.r = 20;
         this.foodAmount = foodAmount;
     }
 }

@@ -10,7 +10,8 @@
 */
 
 let pTime = 0, mTime = 0, x = 0;
-let nbAnt = 100;
+let nbAnt = 1000;
+let nbFood = 1000;
 
 function FpsCtrl(fps, callback) {
     var delay = 1000 / fps,                               // calc. time per frame
@@ -61,7 +62,7 @@ let width  = innerHeight/1.5;           //square
 let height = innerHeight/1.5;
 canvas.width = width;
 canvas.height = height;
-let gl = new Game(nbAnt, 2, width, height);
+let gl = new Game(nbAnt, nbFood, width, height);
 gl.init();
 
 let stats = [];
@@ -71,10 +72,7 @@ const arrToInstanceCountObj = arr => arr.reduce((obj, e) => {
     return obj;
 }, {});
 
-function pauseGame()  { fps.pause(); 
-    //console.log(arrToInstanceCountObj(stats));
-
-}
+function pauseGame()  { fps.pause(); }
 function resumeGame() { fps.start(); }
 
 function draw() {
@@ -82,27 +80,43 @@ function draw() {
     
     for(let i = 0; i < toD.length; i++) {
         ctx.fillStyle = colorForElem[i];
-        
         for(let j = 0; j < toD[i].length; j++) {
             stats.push(toD[i][j].dir);
             ctx.fillRect(toD[i][j].x-toD[i][j].w/2, toD[i][j].y-toD[i][j].h/2, toD[i][j].w, toD[i][j].h);
             if(i == 3){
                 ctx.strokeStyle = "green";
                 ctx.strokeRect(toD[i][j].dir[0], toD[i][j].dir[1], 1, 1);
+            } else if(i == 1) {
+                if(toD[i][j].isAttacked){
+                    ctx.strokeStyle = "red";
+                    toD[i][j].isAttacked = false;
+                } else {
+                    ctx.strokeStyle = "blue";
+                }
+                
+                ctx.beginPath();
+                ctx.arc(toD[i][j].x, toD[i][j].y, toD[i][j].r, 0, 2*Math.PI);
+                ctx.stroke();
+            } else if(i == 0) {
+                ctx.fillStyle = "black";
+                ctx.fillText(toD[i][j].foodAmount, toD[i][j].x, toD[i][j].y);
             }
         }
     }
 }
 
-var fps = new FpsCtrl(60, function(e) {
+
+var fps = new FpsCtrl(1000, function(e) {
+    gl.nextTurn();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 	pTime = e.time;
 	var x = (pTime - mTime) * 0.1;
 	if (x > canvas.width) mTime = pTime;
-    draw()
-    gl.nextTurn();
-    ctx.fillStyle = "black"
+    draw();
+    
+    ctx.fillStyle = "black";
     ctx.fillText("FPS: " + fps.frameRate(), ctx.canvas.width-50, 15);
+    ctx.strokeStyle = "black";
     ctx.strokeRect(0,0,width-1,height-1);
 });
 
