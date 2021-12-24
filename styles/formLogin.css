@@ -1,0 +1,53 @@
+@media only screen and (max-width: 768px) {
+	
+}
+
+@media only screen and (min-width: 768px){
+	
+}
+
+form {
+	margin-left: 15%;
+	background-color: #34495e;
+	position: absolute;
+	padding-top: 5%;
+	padding-bottom: 4%;
+	padding-left: 12%;
+	padding-right: 12%;
+	border-radius: 15px 50px;
+}
+
+input[type="text"],
+input[type="password"]
+{
+	z-index: 0;
+	background-color: #add8e6;
+	margin-top: 2vh;
+	width: 24vh;
+    height: 4vh;
+    font-size: 2vh;
+	border-radius: 5vh 10vh;
+	text-align: center;
+
+}
+
+form i {
+	z-index: 5;
+    margin-left: -3vh;
+    cursor: pointer;
+}
+
+*:focus {
+    outline: none;
+}
+
+.submit {
+	text-align: center;
+	margin-top: 3.5vh;
+	padding-top:  0.5vh;
+	padding-bottom:  0.5vh;
+	padding-left: 2.5vh;
+	padding-right: 2.5vh;
+	font-size: 2.5vh;
+	border-radius: 1vh 2vh ;
+}

@@ -87,9 +87,6 @@ var yGreenRectOffset = Math.random() * (height/2)+height/4;
 
 
 function draw(){
-    //let randomColor = Math.random() > 0.5? '#ff8080' : '#0099b0';
-    //ctx.fillStyle = randomColor;
-    //ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.strokeStyle ="green";
 
     let range = new Rectangle(xGreenRectOffset, yGreenRectOffset, wGreenRect/2, hGreenRect/2)

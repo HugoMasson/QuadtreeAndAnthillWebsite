@@ -1,0 +1,11 @@
+.dump {
+    border-left: 4px solid #2c2eb8;
+    background-color: #DCD9E8;
+    padding-left: 5px;
+    margin-bottom: 40px;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: rgba(88, 54, 201, 0.4) 5px 5px, rgba(88, 54, 201, 0.3) 10px 10px, rgba(88, 54, 201, 0.2) 15px 15px, rgba(88, 54, 201, 0.1) 20px 20px, rgba(88, 54, 201, 0.05) 25px 25px;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 5%;
+}

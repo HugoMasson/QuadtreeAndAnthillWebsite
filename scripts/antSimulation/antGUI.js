@@ -10,8 +10,9 @@
 */
 
 let pTime = 0, mTime = 0, x = 0;
-let nbAnt = 1000;
-let nbFood = 1000;
+let nbAnt = 500;    //per anthill
+let nbFood = 2000;
+let nbAnthills = 4;
 
 function FpsCtrl(fps, callback) {
     var delay = 1000 / fps,                               // calc. time per frame
@@ -54,18 +55,19 @@ function FpsCtrl(fps, callback) {
     };
 }
 
-const colorForElem = ["red", "blue", "grey", "black"];
+
 
 let canvas = document.getElementById("canvas");;
 let ctx = canvas.getContext("2d");
-let width  = innerHeight/1.5;           //square
-let height = innerHeight/1.5;
-canvas.width = width;
-canvas.height = height;
-let gl = new Game(nbAnt, nbFood, width, height);
+canvas.width = innerHeight/1.2;
+canvas.height = innerHeight/1.2;
+let width  = canvas.width*10;           //square
+let height = canvas.height*10;
+let focusAnthill = null;
+
+let gl = new Game(nbAnt, nbAnthills, nbFood, width, height);
 gl.init();
 
-let stats = [];
 
 const arrToInstanceCountObj = arr => arr.reduce((obj, e) => {
     obj[e] = (obj[e] || 0) + 1;
@@ -75,49 +77,86 @@ const arrToInstanceCountObj = arr => arr.reduce((obj, e) => {
 function pauseGame()  { fps.pause(); }
 function resumeGame() { fps.start(); }
 
-function draw() {
+function drawSeen() {
     let toD = gl.toDraw();
     
-    for(let i = 0; i < toD.length; i++) {
-        ctx.fillStyle = colorForElem[i];
-        for(let j = 0; j < toD[i].length; j++) {
-            stats.push(toD[i][j].dir);
-            ctx.fillRect(toD[i][j].x-toD[i][j].w/2, toD[i][j].y-toD[i][j].h/2, toD[i][j].w, toD[i][j].h);
-            if(i == 3){
-                ctx.strokeStyle = "green";
-                ctx.strokeRect(toD[i][j].dir[0], toD[i][j].dir[1], 1, 1);
-            } else if(i == 1) {
-                if(toD[i][j].isAttacked){
-                    ctx.strokeStyle = "red";
-                    toD[i][j].isAttacked = false;
-                } else {
-                    ctx.strokeStyle = "blue";
-                }
-                
-                ctx.beginPath();
-                ctx.arc(toD[i][j].x, toD[i][j].y, toD[i][j].r, 0, 2*Math.PI);
-                ctx.stroke();
-            } else if(i == 0) {
-                ctx.fillStyle = "black";
-                ctx.fillText(toD[i][j].foodAmount, toD[i][j].x, toD[i][j].y);
-            }
-        }
+    let xOffSet = zh.xOffSet;
+    let yOffSet = zh.yOffSet;
+    //console.log("a: ",xOffSet, yOffSet);
+    if(focusAnthill != null && focusAnthill >= 0 && focusAnthill < toD[0].length){
+        xOffSet = -toD[0][focusAnthill].x+canvas.width/2;
+        yOffSet = -toD[0][focusAnthill].y+canvas.height/2;
+        zh.xOffSet = xOffSet;
+        zh.yOffSet = yOffSet;
+        //console.log("b: ",xOffSet, yOffSet);
     }
+    
+    ctx.translate(xOffSet, yOffSet);
+    ctx.fillStyle = "grey";
+    ctx.fillRect(-width,-height,width*3,height*3);
+    dh.draw(toD);
+    ctx.translate(-xOffSet, -yOffSet);
 }
 
+function focusOnAnthill(id) { focusAnthill = id; }
 
-var fps = new FpsCtrl(1000, function(e) {
-    gl.nextTurn();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+var fpsTarget = 60;
+var iteration = 1;
+
+var fps = new FpsCtrl(fpsTarget, function(e) {
+    if(iteration >= 50000) {iteration = 1;}
+    gl.nextTurn(iteration, fpsTarget);
 	pTime = e.time;
 	var x = (pTime - mTime) * 0.1;
 	if (x > canvas.width) mTime = pTime;
-    draw();
-    
-    ctx.fillStyle = "black";
-    ctx.fillText("FPS: " + fps.frameRate(), ctx.canvas.width-50, 15);
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(0,0,width-1,height-1);
+    drawSeen();
+    iteration++;
 });
 
 fps.start();
+canvas.onwheel = zoom;
+
+let zh = new ZoomHandler(canvas, ctx, width, height, 0.02, 32);  //from 10x smaller to 10x bigger zoom
+let dh = new DrawHandler(canvas, ctx, width, height);
+function zoom(event) {
+    event.preventDefault();
+    if(event.deltaY < 0){
+        zh.zoomBy(2);
+    } else if(event.deltaY > 0) {
+        zh.zoomBy(0.5);
+    } 
+}
+
+document.addEventListener('keydown', logKey);
+
+function logKey(e) {
+    e.preventDefault();
+    switch(e.code) {
+        case 'Digit1':case 'Digit2':case 'Digit3':case 'Digit4':case 'Digit5':case 'Digit6':case 'Digit7':case 'Digit8':case 'Digit9':
+            focusOnAnthill((e.code[e.code.length-1])-1);
+
+    }
+}
+
+function left(){
+    zh.moveOffset(100*(1/zh.zoomFactor), 0);
+    focusAnthill = null;
+}
+function right(){
+    zh.moveOffset(-100*(1/zh.zoomFactor), 0);
+    focusAnthill = null;
+}
+function up(){
+    zh.moveOffset(0, 100*(1/zh.zoomFactor));
+    focusAnthill = null;
+}
+function down(){
+    zh.moveOffset(0, -100*(1/zh.zoomFactor));
+    focusAnthill = null;
+}
+
+// refactor draw omg ! |not ok|
+// need function to translate scales |ok for now i guess|
+
+//DO A FILE WITH ALL VALUES AND FUNCTION FOR FOOD REPROD / ANTH REPORD ...
+// GL ! u will do it I know
