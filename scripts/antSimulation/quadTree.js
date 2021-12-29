@@ -1,9 +1,12 @@
 
 
 class Point {
-    constructor(x, y) {
+    constructor(x, y, id, obj, indexInArray) {
         this.x = x;
         this.y = y;
+        this.id = id;
+        this.obj = obj;
+        this.indexInArray = indexInArray;
     }
 }
 
@@ -32,7 +35,6 @@ class Rectangle {
     }
 
 }
-
 
 class QuadTree {
     constructor(boundary, n) {
@@ -84,7 +86,7 @@ class QuadTree {
             found = [];
         }
         if(!this.boundary.intersects(range)){
-            return;
+            return found;
         } else {
             for(let p of this.points) {
                 if(range.contains(p)) {
@@ -98,6 +100,7 @@ class QuadTree {
                 this.southeast.query(range, found);
             }
         }
+        //console.log(found);
         return found;
     }    
 

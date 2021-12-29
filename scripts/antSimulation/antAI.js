@@ -8,13 +8,17 @@ class Ant {
         this.idAnthill = idAnthill;
         this.full = false;
         this.speed = 5;
-        this.hasClearObjective = false;
         this.dir = [];
         this.dir.push(this.x);
         this.dir.push(this.y);
         this.dir.push(Math.atan2(0, 0));
         this.maxLinearDist = 75;
-        this.hasMoved = true;
+        this.maxVisionDist = 10;
+        this.followPheroP = false;
+        this.receptiveToPheroIn = 0;
+        this.toReduce = false;
+
+        this.menuOpen = false;
     }
 
     isNear(target, d=target.r) {
@@ -23,6 +27,14 @@ class Ant {
 
     isFull() {
         return (this.full);
+    }
+
+    followPheroPath(path){ 
+        //really bad for now the ant with go directly to the first pheromone (where the food is)
+        //that's cheating but I can't figure out something working well
+        //this.pheroPath = path;      //useless with this 'cheat' but needed for when I solve the problem
+        this.setTarget(path.pheroArr[0]);
+        this.followPheroP = true;
     }
 
     setFull(value) {
@@ -38,7 +50,7 @@ class Ant {
     setRandomTarget(anthill) {
         let rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
         let ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2 
-        while(this.dist(rx, ry, anthill.x, anthill.y) > anthill.maxDistForAnt) {
+        while(this.dist(rx, ry, anthill.x, anthill.y) > anthill.maxDistForAnt) {        //check if move is in anthill boundary
             rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
             ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
         }
@@ -63,14 +75,29 @@ class Ant {
         } else {
             let rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
             let ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2 
-            while(this.dist(rx, ry, anthill.x, anthill.y) > anthill.maxDistForAnt) {
+            while(this.dist(rx, ry, anthill.x, anthill.y) > anthill.maxDistForAnt) {    //check if move is in anthill boundary
                 rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
                 ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
             }
             this.dir[0] = rx;
             this.dir[1] = ry;
             this.dir[2] = Math.atan2(this.dir[0] - this.x, this.dir[1] - this.y);
+            if(this.followPheroP == true) {     //see quadTreeAlgoHandler at nextTurn after let points = this.qtree.query ...
+                this.receptiveToPheroIn = 20;
+                this.followPheroP = false;
+                this.toReduce = true;
+            }
         }
+    }
+
+    isClickedOn(posx, posy) {     //menu open ?
+        if(posx >= this.x-this.w/2 && posx <= this.x+this.x/2 && posy >= this.y-this.h/2 && posy <= this.y+this.h/2) {
+            return true;
+        }return false;
+    }
+
+    openMenu() {
+        this.menuOpen = true;
     }
 
     dist(a, b, c, d) {
@@ -80,3 +107,4 @@ class Ant {
 }
 
 
+//last refactor done 28/12/2021 17h20
