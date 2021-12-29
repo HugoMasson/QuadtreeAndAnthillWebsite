@@ -94,7 +94,15 @@ function drawSeen() {
     ctx.fillStyle = "grey";
     ctx.fillRect(-width,-height,width*3,height*3);
     dh.draw(toD,xOffSet,yOffSet,zh.zoomFactor, toP);
+    
+    ctx.lineWidth = 20;
+    ctx.strokeStyle = "black";
+    ctx.beginPath();
+    ctx.rect(-10,-10,width+10,height+10);
+    ctx.stroke();
+    
     ctx.translate(-xOffSet, -yOffSet);
+   
     
 }
 
@@ -131,12 +139,17 @@ window.addEventListener('keydown', function(e) {
     if (e.defaultPrevented) {
         return; // Do nothing if the event was already processed
     }
+    //console.log(e.code);
     switch(e.code) {
-        case 'Digit1':case 'Digit2':case 'Digit3':case 'Digit4':case 'Digit5':case 'Digit6':case 'Digit7':case 'Digit8':case 'Digit9':
+        case 'Digit1':case 'Digit2':case 'Digit3':case 'Digit4':case 'Digit5':case 'Digit6':case 'Digit7':case 'Digit8':case 'Digit9': //focus on anthill (1 can only go to 10 for now)
             focusOnAnthill((e.code[e.code.length-1])-1);
             break;
-        case 'Semicolon':
+        case 'Semicolon':   //m: to close all instances of menus
             dh.closeAllMenus(gl.toDraw());
+            break;
+        case 'KeyT':        //t: to see territories (will include stats and graphs after uwu)
+            dh.displayTerritories();
+            break;
         default:
             return;
     }
@@ -199,9 +212,7 @@ function getCursorPosition(event) {
 
 !!!!!!!!!!!!--||
 
-< BUG THE FOOD DISAPEAR WITHOUT REASON IT'S 
-REALLY VISIBLE WHEN THERE IS A REALLY GREAT 
-AMOUNT OF FOOD >
+
 
 ||--!!!!!!!!!!!!
 

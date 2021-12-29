@@ -11,7 +11,7 @@ class quadTreeHandler {
     nextTurn(iteration, fpsTarget, anthills, foodSources, obstacles, ants, pheroPaths, qtSubDivideNumber) {
         let foodSourceToDel = [];
         this.qtree = new QuadTree(this.boundary, qtSubDivideNumber);
-
+        //anthills[0].addAnt(1);
         //build quadtree with antills / foodSources / pheroPath (with phero in it)
         for(let i = 0; i < anthills.length; i++) {
             let point = new Point(anthills[i].x, anthills[i].y, "anthill", anthills[i], i);
@@ -60,7 +60,7 @@ class quadTreeHandler {
                             pheroPaths.push(new PheromonePath(0, i, []));
                             pheroPaths[pheroPaths.length-1].placePheromone(a.x, a.y, 1, 150);
                         }
-                        if(points[k].obj.amount == 0) { foodSourceToDel.push(points[k].indexInArray); }
+                        if(points[k].obj.amount == 0 && !foodSourceToDel.includes(points[k].indexInArray)) { foodSourceToDel.push(points[k].indexInArray); }
                         a.setFull(true);
                         a.setTarget(anthills[a.idAnthill]);  
                         break; 
@@ -82,7 +82,9 @@ class quadTreeHandler {
             
 
         }
-        for(let k = 0; k < foodSourceToDel.length; k++) {   //delete foodSources with 0 food =_=
+        
+        for(let k = foodSourceToDel.length-1; k >= 0; k--) {   //delete foodSources with 0 food =_=
+            
             foodSources.splice(foodSourceToDel[k], 1);
         }
     }

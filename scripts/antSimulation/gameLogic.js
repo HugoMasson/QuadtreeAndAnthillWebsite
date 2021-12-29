@@ -112,21 +112,19 @@ class Game {
     init() {
         let posFood = [];
         for(let i = 0; i < this.nbAnthills; i++) {  //create anthills at random pos
-            this.anthills.push(new Anthill(this.randNum(0,this.cWidth), this.randNum(0,this.cHeight)));
-            //this.anthills.push(new Anthill(5000, 5000));
+            //this.anthills.push(new Anthill(this.randNum(0,this.cWidth), this.randNum(0,this.cHeight)));
+            this.anthills.push(new Anthill(5000, 5000));
             for(let j = 0; j < this.antsNb; j++) {  //create ants in the anthill at THEIR anthill pos
                 this.ants.push(new Ant(this.anthills[i].x, this.anthills[i].y, i));
-                this.anthills[i].nbAnts++;
+                this.anthills[i].addAnt(1);
             }
         }
         for(let i = 0; i < this.foodSourceNb; i++) {
             let tempX = this.randNum(0, this.cWidth);
             let tempY = this.randNum(0, this.cHeight);
+
             /*  was to space out the food
-            while(this.foodContains(posFood, tempX, tempY)){
-                tempX = this.randNum(0, this.cWidth);
-                tempY = this.randNum(0, this.cHeight);
-            }
+            while(this.foodContains(posFood, tempX, tempY)){tempX = this.randNum(0, this.cWidth);tempY = this.randNum(0, this.cHeight);}
             */
             this.foodSources.push(new FoodSource(tempX, tempY));
             posFood.push([tempX, tempY]);

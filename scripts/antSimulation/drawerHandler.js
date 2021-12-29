@@ -5,6 +5,7 @@ class DrawHandler {
         this.canvas = canvas;
         this.ctx = ctx;
         this.menus = new MenuHandler();
+        this.hasToDisplayTerritories = false;
     }
 
     draw(toD, xos, yos, z, onlyDraw) {    //only draw things user can see with zoom + anthills range circle
@@ -36,6 +37,9 @@ class DrawHandler {
                     ctx.strokeStyle = "red";
                     ctx.lineWidth = 15;
                     this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].maxDistForAnt);
+                    if(this.hasToDisplayTerritories){
+                       this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].maxDistForAnt-7, true, "green", 0.2);
+                    }
                 }
                 //is it on vision
                 if((toD[i][j].x >= (-xos+canvas.width/2)-canvas.width/(2*z) && toD[i][j].x <= (-xos+canvas.width/2)-canvas.width/(2*z)+canvas.width/z && toD[i][j].y >= (-yos+canvas.height/2)-canvas.height/(2*z) && toD[i][j].y <= (-yos+canvas.height/2)-canvas.height/(2*z)+canvas.height/z)){
@@ -46,7 +50,7 @@ class DrawHandler {
                     ctx.fillStyle = colorForElem[i];
                     if(i == 0) {
                         this.changeFont("100px Arial");
-                        this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, "red");
+                        this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, false, "red");
                         ctx.fillStyle = "black";
                         ctx.fillText("id:"+(j+1), toD[i][j].x-50, toD[i][j].y-toD[i][j].maxDistForAnt);
                         ctx.fillText(toD[i][j].foodAmount, toD[i][j].x, toD[i][j].y);
@@ -57,9 +61,9 @@ class DrawHandler {
                         }
                     } else if(i == 1) {
                         if(toD[i][j].isAttacked){
-                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, "red");
+                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, false, "red");
                         } else {
-                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, "blue");
+                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, false, "blue");
                         }
                     }
                     ctx.fillRect(toD[i][j].x-toD[i][j].w/2, toD[i][j].y-toD[i][j].h/2, toD[i][j].w, toD[i][j].h); 
@@ -71,11 +75,13 @@ class DrawHandler {
         }
     }
 
-    drawCircle(x, y, r ,color=null, sAngle=0, eAngle=2*Math.PI) {
-        if(color != null){ ctx.strokeStyle = color; }
+    drawCircle(x, y, r, isFilled=false, color=null, alpha=1, sAngle=0, eAngle=2*Math.PI) {
+        //console.log(color);
+
         ctx.beginPath();
-        ctx.arc(x, y, r, sAngle, eAngle);
-        ctx.stroke();
+        ctx.arc(x, y, r, sAngle, eAngle, false);
+        if(isFilled) { if(color != null) {ctx.fillStyle = color; ctx.globalAlpha = alpha; } ctx.fill(); } else { if(color != null) {ctx.strokeStyle = color; ctx.globalAlpha = alpha; } ctx.stroke(); }
+        ctx.globalAlpha = 1;
     }
 
     changeFont(strFont) {
@@ -128,6 +134,10 @@ class DrawHandler {
                 entities[i][j].menuOpen = false;
             }
         }
+    }
+
+    displayTerritories() {
+        this.hasToDisplayTerritories = !this.hasToDisplayTerritories;
     }
 }
 

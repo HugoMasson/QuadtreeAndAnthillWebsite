@@ -52,10 +52,20 @@ class Anthill {
         this.w = 15;
         this.h = 15;
         this.r = 50;
-        this.maxDistForAnt = 1000;
         this.foodAmount = 100;
         this.nbAnts = 0;
         this.menuOpen = false;
+        this.maxDistForAnt = 100;
+    }
+
+    addAnt(n) {
+        this.nbAnts += n;
+        this.maxDistForAnt = 100+this.nbAnts*2;
+    }
+
+    supprAnt(n) {
+        this.nbAnts -= n;
+        this.maxDistForAnt = 100+this.nbAnts*2;
     }
 
     addFood(value=1) {
