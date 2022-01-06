@@ -13,12 +13,18 @@ class Ant {
         this.dir.push(this.y);
         this.dir.push(Math.atan2(0, 0));
         this.maxLinearDist = 75;
-        this.maxVisionDist = 10;
+        this.maxVisionDist = 15;
         this.followPheroP = false;
         this.receptiveToPheroIn = 0;
+        this.pheroFoodTime = 150;
+        this.attackCdMax = 20;
+        this.attackCd = 0;
+        this.ennemySpotted = false;
         this.toReduce = false;
-
         this.menuOpen = false;
+
+        this.movingTarget = null;
+        this.toDel = false;
     }
 
     isNear(target, d=target.r) {
@@ -63,21 +69,41 @@ class Ant {
         this.speed = speed;
     }
 
+    ennemyAtt() {
+        if(Math.random() * (10) <= 1){
+            this.toDel = true;
+        }
+    }
+
     isTarget(target) {
         return (target.x == this.dir[0] && target.y == this.dir[1]);
     }
 
     move(anthill) {
+        
+        if(this.movingTarget != null) {
+            //console.log(this.x, this.y, this.movingTarget.y,this.movingTarget.x, anthill.x, anthill.y);
+            //console.log(this.dist(this.movingTarget.x, this.movingTarget.y, this.y,this.x));
+            if(this.dist(this.movingTarget.x, this.movingTarget.y, this.y,this.x) > 50) {
+                //console.log("zaeaze");
+                this.movingTarget = null;
+                this.ennemySpotted = false;
+                this.setRandomTarget(anthill);
+                
+            } else {
+                this.setTarget(this.movingTarget);      
+            }
+        }
         if(Math.abs(this.dir[0] - this.x) >= 4 || Math.abs(this.dir[1] - this.y) >= 4){
             let angle = Math.atan2(this.dir[0] - this.x, this.dir[1] - this.y);
             this.x += this.speed * Math.sin( angle );
             this.y += this.speed * Math.cos( angle );
         } else {
-            let rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
-            let ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2 
+            let rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2;
+            let ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2;
             while(this.dist(rx, ry, anthill.x, anthill.y) > anthill.maxDistForAnt) {    //check if move is in anthill boundary
-                rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
-                ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2
+                rx = this.x + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2;
+                ry = this.y + Math.random() * (this.maxLinearDist)-this.maxLinearDist/2;
             }
             this.dir[0] = rx;
             this.dir[1] = ry;
@@ -90,7 +116,11 @@ class Ant {
         }
     }
 
-    isClickedOn(posx, posy) {     //menu open ?
+    followMovingTarget(target) {
+        this.movingTarget = target;
+    } 
+
+    isClickedOn(posx, posy) {     //useless i believe
         if(posx >= this.x-this.w/2 && posx <= this.x+this.x/2 && posy >= this.y-this.h/2 && posy <= this.y+this.h/2) {
             return true;
         }return false;
@@ -107,4 +137,4 @@ class Ant {
 }
 
 
-//last refactor done 28/12/2021 17h20
+//last Cleaning done 28/12/2021 17h20

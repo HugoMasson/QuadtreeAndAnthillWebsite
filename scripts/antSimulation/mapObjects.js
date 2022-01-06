@@ -55,17 +55,21 @@ class Anthill {
         this.foodAmount = 100;
         this.nbAnts = 0;
         this.menuOpen = false;
-        this.maxDistForAnt = 100;
+        this.maxDistForAnt = 500;
+    }
+
+    fRadius(x) {
+        return x*0.5;
     }
 
     addAnt(n) {
         this.nbAnts += n;
-        this.maxDistForAnt = 100+this.nbAnts*2;
+        this.maxDistForAnt = 500+this.fRadius(this.nbAnts);
     }
 
     supprAnt(n) {
         this.nbAnts -= n;
-        this.maxDistForAnt = 100+this.nbAnts*2;
+        this.maxDistForAnt = 500+this.nbAnts*2;
     }
 
     addFood(value=1) {
@@ -89,9 +93,10 @@ class Pheromone {
         this.owner = owner;
         this.x = x;
         this.y = y;
+        this.w = 2;
+        this.h = 2;
         this.strengh = strengh;
         this.timeLeft = timeLeft;
-
         this.menuOpen = false;
     }
 
@@ -112,4 +117,4 @@ class PheromonePath {
     }
 }
 
-//never really refactored
+//never really Cleaned

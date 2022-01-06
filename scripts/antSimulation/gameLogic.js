@@ -9,6 +9,7 @@ class Game {
         this.cHeight = cHeight;
         this.algo = document.getElementById("algo").value;
         this.subDiviseQtreeAt = document.getElementById("qtreeN").value;
+        this.nbEnnemies = document.getElementById("nbEnnemies").value;
 
         //HAVE to refactor this: these var are arbitrary should 
         //ADD A FKING file for these const and funct to alter them !!!!
@@ -22,6 +23,7 @@ class Game {
         this.obstacles      = [];
         this.ants           = [];
         this.paths          = [];
+        this.ennemies       = [];
 
         this.qth;
 
@@ -83,7 +85,7 @@ class Game {
             this.nextTurnAntsClassic(iteration, fpsTarget);
             this.nextTurnFoodClassic(iteration, fpsTarget);
         } else if(this.algo == "Quadtree nlog(n)") {
-            this.qth.nextTurn(iteration, fpsTarget, this.anthills, this.foodSources, this.obstacles, this.ants, this.paths,  this.subDiviseQtreeAt);
+            this.qth.nextTurn(iteration, fpsTarget, this.anthills, this.foodSources, this.obstacles, this.ants, this.ennemies, this.paths,  this.subDiviseQtreeAt);
         }
     }
 
@@ -112,8 +114,7 @@ class Game {
     init() {
         let posFood = [];
         for(let i = 0; i < this.nbAnthills; i++) {  //create anthills at random pos
-            //this.anthills.push(new Anthill(this.randNum(0,this.cWidth), this.randNum(0,this.cHeight)));
-            this.anthills.push(new Anthill(5000, 5000));
+            this.anthills.push(new Anthill(this.randNum(0,this.cWidth), this.randNum(0,this.cHeight)));
             for(let j = 0; j < this.antsNb; j++) {  //create ants in the anthill at THEIR anthill pos
                 this.ants.push(new Ant(this.anthills[i].x, this.anthills[i].y, i));
                 this.anthills[i].addAnt(1);
@@ -122,12 +123,14 @@ class Game {
         for(let i = 0; i < this.foodSourceNb; i++) {
             let tempX = this.randNum(0, this.cWidth);
             let tempY = this.randNum(0, this.cHeight);
-
             /*  was to space out the food
             while(this.foodContains(posFood, tempX, tempY)){tempX = this.randNum(0, this.cWidth);tempY = this.randNum(0, this.cHeight);}
             */
             this.foodSources.push(new FoodSource(tempX, tempY));
             posFood.push([tempX, tempY]);
+        }
+        for(let i = 0; i < this.nbEnnemies; i++) {
+            this.ennemies.push(new Ennemy(this.randNum(0,this.cWidth), this.randNum(0,this.cHeight), 50));
         }
         if(this.algo == "Quadtree nlog(n)") {
             this.qth = new quadTreeHandler(this.cWidth, this.cHeight);
@@ -140,7 +143,7 @@ class Game {
         //doesn't excude anything 
         //(upgrade can be made by having a var for every ant to draw / every foodsource to draw)
         //and change them only when moving or zoom si we won't have to if every object in drawHandler
-        return [this.anthills, this.foodSources, this.obstacles, this.ants, this.paths];
+        return [this.anthills, this.foodSources, this.obstacles, this.ants, this.ennemies, this.paths];
     }
 
     randNum(min, max) {
@@ -151,18 +154,18 @@ class Game {
 }
 
 /*
-0) REFACTOR PRETTY MUCH EVERYTHING
-1) clean code for next turn
+0) Periodical Code Cleaning
+1) open all menus (for fun)
 2) add spawn random food / birth ant linked to a var
-3) OK
-4) add click listener for every element (create a id card fr every elem) and func in gui to draw it
+3) focus on entity (ant / enemy and the camera moves with it)
+4) Ok
 5) add walls and then modify the movement (will have to do an algo)
-6) add pheromones and follow phero
+6) Ok
 7) add classes of ants (worker fighter ...)
-8) add enemmies entities / fight / defend / call for help ...
+8) add enemmies entities / fight / defend / call for help ...                           [on it !!!]
 9) add genes for new born ants inheritance (and so place cond on birth not just random)
 10) types of food
 */
 
 
-//last refactor done 28/12/2021 17h03
+//last Cleaning done 28/12/2021 17h03

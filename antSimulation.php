@@ -6,6 +6,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="HugoCode | Anthill Section">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="The section of HugoCode that try to create fun stuff related to ants uwu">
+    <meta property="og:image" content="https://hugocode.com/anthill/assets/previewAnthillSimu.png">
+    <meta property="og:url" content="https://hugocode.com/anthill/assets/previewAnthillSimu.png">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/mainStyle.css">
@@ -50,6 +57,12 @@
                 <input type="number" id="nbAnthills" value="1" class="form-control-plaintext">
             </div>
         </div>
+        <div class="form-group row">
+            <label for="nbEnnemies" class="col-sm-2 col-form-label">Nb Ennemies</label>
+            <div class="col-sm-10">
+                <input type="number" id="nbEnnemies" value="5" class="form-control-plaintext">
+            </div>
+        </div>
         <br>
         <button type="button" class="btn btn-primary" onclick="changeValues()">OK</button>
     </form>
@@ -82,6 +95,7 @@
 
 
     <!--Ant With QuadTree Algo-->
+    <script src="scripts/antSimulation/ennemies.js"></script>
     <script src="scripts/antSimulation/menuHandler.js"></script>
     <script src="scripts/antSimulation/drawerHandler.js"></script>
     <script src="scripts/antSimulation/zoomHandler.js"></script>

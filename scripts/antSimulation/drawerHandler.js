@@ -1,4 +1,4 @@
-const colorForElem = ["red", "blue", "grey", "black", "orange"];
+const colorForElem = ["red", "blue", "grey", "black", "red", "orange"];
 
 class DrawHandler {
     constructor(canvas, ctx){
@@ -14,23 +14,24 @@ class DrawHandler {
         ctx.fillStyle = colorForElem[colorForElem.length-1];
         
         //pheromones drawer + decrease time left (and make them dispawn)
-        for(let j = 0; j < toD[4].length; j++) {    //loop paths
-            if(toD[4][j].pheroArr.length != 0) {
-                for(let p = toD[4][j].pheroArr.length-1; p >= 0; p--) {     //loop pheromones inside paths
-                    ctx.fillRect(toD[4][j].pheroArr[p].x, toD[4][j].pheroArr[p].y, 2, 2);
+        for(let j = 0; j < toD[len].length; j++) {    //loop paths
+            if(toD[len][j].pheroArr.length != 0) {
+                for(let p = toD[len][j].pheroArr.length-1; p >= 0; p--) {     //loop pheromones inside paths
+                    ctx.fillRect(toD[len][j].pheroArr[p].x, toD[len][j].pheroArr[p].y, 2, 2);
                     if(onlyDraw) {
-                        toD[4][j].pheroArr[p].timeLeft--;
-                        if(toD[4][j].pheroArr[p].timeLeft <= 0){
-                            toD[4][j].pheroArr.splice(p, 1);
+                        toD[len][j].pheroArr[p].timeLeft--;
+                        if(toD[len][j].pheroArr[p].timeLeft <= 0){
+                            toD[len][j].pheroArr.splice(p, 1);
                         }
                     }
                 }
             } else {
-                toD[4].splice(j, 1);
+                toD[len].splice(j, 1);
             }
         }
         for(let i = 0; i < len; i++) {  //0:anthills 1:foodSources 2:obstacles 3:ants
             //ctx.fillStyle = colorForElem[i];   
+            ctx.globalAlpha = 1;
             for(let j = 0; j < toD[i].length; j++) {
                 ctx.lineWidth = 2;
                 if(i == 0) {
@@ -45,9 +46,9 @@ class DrawHandler {
                 if((toD[i][j].x >= (-xos+canvas.width/2)-canvas.width/(2*z) && toD[i][j].x <= (-xos+canvas.width/2)-canvas.width/(2*z)+canvas.width/z && toD[i][j].y >= (-yos+canvas.height/2)-canvas.height/(2*z) && toD[i][j].y <= (-yos+canvas.height/2)-canvas.height/(2*z)+canvas.height/z)){
                     if(toD[i][j].menuOpen) {  
                         menusToDraw.push([toD[i][j], i, j, toD[i].length]);
-                        //this.drawMenu(toD[i][j], i, j, toD[i].length);  
                     }
                     ctx.fillStyle = colorForElem[i];
+                    
                     if(i == 0) {
                         this.changeFont("100px Arial");
                         this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, false, "red");
@@ -58,15 +59,22 @@ class DrawHandler {
                         if(toD[i][j].full){
                             ctx.fillStyle = "pink";
                             ctx.fillRect(toD[i][j].x-toD[i][j].w/2 -1, toD[i][j].y-toD[i][j].h/2 -1, toD[i][j].w+2, toD[i][j].h+2);
+                        } else if(toD[i][j].ennemySpotted) {
+                            ctx.fillStyle = "green";
+                            //console.log("ahdigidhahdo")
+                            ctx.fillRect(toD[i][j].x-toD[i][j].w/2 -1, toD[i][j].y-toD[i][j].h/2 -1, toD[i][j].w+2, toD[i][j].h+2);
                         }
                     } else if(i == 1) {
                         if(toD[i][j].isAttacked){
-                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, false, "red");
+                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, true, "red");
                         } else {
-                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, false, "blue");
+                            this.drawCircle(toD[i][j].x, toD[i][j].y, toD[i][j].r, true, "blue");
                         }
+                    } else if(i == 4) {
+                        ctx.globalAlpha = 0.4;
                     }
                     ctx.fillRect(toD[i][j].x-toD[i][j].w/2, toD[i][j].y-toD[i][j].h/2, toD[i][j].w, toD[i][j].h); 
+                    ctx.globalAlpha = 1;
                 }
             }
         }
@@ -103,7 +111,7 @@ class DrawHandler {
             case 0:
                 ctx.fillText("--Anthill--", entity.x+30, entity.y+25);
                 ctx.fillText("Nb ants: "+entity.nbAnts, entity.x+20, entity.y+75);
-                ctx.fillText("Radius: "+entity.maxDistForAnt, entity.x+20, entity.y+100);
+                ctx.fillText("Radius: "+Math.floor(entity.maxDistForAnt), entity.x+20, entity.y+100);
                 ctx.fillText("Food: "+entity.foodAmount, entity.x+20, entity.y+125);
                 break;
             case 1:
@@ -120,6 +128,9 @@ class DrawHandler {
                 ctx.fillText("Following Phero: "+entity.followPheroP, entity.x+20, entity.y+100);
                 break;
             case 4:
+                ctx.fillText("--Ennemy--", entity.x+30, entity.y+25);
+                break;
+            case 5:
                 ctx.fillText("--Pheromone--", entity.x+30, entity.y+25);
                 break;
             default:
@@ -141,4 +152,4 @@ class DrawHandler {
     }
 }
 
-//last refactor done 28/12/2021 17h00
+//last Cleaning done 28/12/2021 17h00

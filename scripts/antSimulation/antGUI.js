@@ -9,7 +9,7 @@
         https://fr.wikipedia.org/wiki/Ph%C3%A9romone#:~:text=leur%20%C2%AB%20territoire%20%C2%BB.-,Ph%C3%A9romones%20de%20trace,occurrence%2C%20des%20hydrocarbures%20non%20volatils.
 */
 
-var fpsTarget = 60;
+var fpsTarget = 9999;
 var iteration = 1;
 var toP = true;
 
@@ -195,10 +195,9 @@ function getCursorPosition(event) {
     let x = xOSet+((event.clientX-rect.x)/zh.zoomFactor);
     let y = yOSet+((event.clientY-rect.y)/zh.zoomFactor);
     dh.addMenu(x, y, gl.toDraw());  //add a menu if needed on clicked object
-    
 }
 
-//last refactor done 28/12/2021 16:30
+//last Cleaning done 28/12/2021 16:30
 
 
 
@@ -210,11 +209,21 @@ function getCursorPosition(event) {
 
 /*
 
-!!!!!!!!!!!!--||
+||--!!!!!!!!!!!!--||
 
+: BUG :
 
+ANTS DON'T FOLLOW ENNEMIES IDK WHY OR HOW XD ?? WORK A BIT BUT I THINK IT 
+DOESN4T UPDATE THE TARGET POS WHEN IT SHOULD ALSO ANT THAT FOLLOW ARE ON THE RIGHT BOTTOM NOT TOP LEFT ???
+SEE SCREESHOT ON DESKTOP
 
-||--!!!!!!!!!!!!
++
+
+SEEMS THAT ENNEMIES MAKE SOME KIND OF BLUR 
+ONLY WHEN USING ALPHA SHIT (solution don't use alpha :) )
+but would like to use it in the future
+
+||--!!!!!!!!!!!!--||
 
 */
 
